@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Eric Wallet Web Application</h1>
+        
+        <div class="mt-4">
+            <h3>Add Account</h3>
+            <form id="addAccountForm">
+                <input type="text" name="name" placeholder="Account Name" class="form-control mb-2" required>
+                <input type="number" name="balance" placeholder="Initial Balance" class="form-control mb-2">
+                <button type="submit" class="btn btn-primary">Add Account</button>
+            </form>
+        </div>
+
+        <div class="mt-4">
+            <h3>Add Category</h3>
+            <form id="addCategoryForm">
+                <input type="text" name="name" placeholder="Category Name" class="form-control mb-2" required>
+                <button type="submit" class="btn btn-primary">Add Category</button>
+            </form>
+        </div>
+
+        <div class="mt-4">
+            <h3>Generate Report</h3>
+            <form id="generateReportForm">
+                <input type="date" name="start_date" class="form-control mb-2" required>
+                <input type="date" name="end_date" class="form-control mb-2" required>
+                <button type="submit" class="btn btn-primary">Generate Report</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('addAccountForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            const response = await fetch('/add_account', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            alert(result.message);
+        });
+
+        document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            const response = await fetch('/add_category', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            alert(result.message);
+        });
+
+        document.getElementById('generateReportForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const params = new URLSearchParams(formData).toString();
+            const response = await fetch(`/generate_report?${params}`);
+            const report = await response.json();
+            console.log(report);
+            alert('Report generated. Check console for details.');
+        });
+    </script>
+</body>
+</html>
